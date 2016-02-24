@@ -11,5 +11,4 @@ template_names = EveryPolitician::Wikidata.wikipedia_xpath(
 ).uniq.reject { |n| n.include? ':' }
 
 EveryPolitician::Wikidata.scrape_wikidata(names: { en: category_names | template_names })
-warn EveryPolitician::Wikidata.notify_rebuilder
 
