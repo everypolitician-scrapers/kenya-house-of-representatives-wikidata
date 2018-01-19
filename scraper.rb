@@ -10,19 +10,7 @@ template_names = EveryPolitician::Wikidata.wikipedia_xpath(
   xpath: '//ul[@id="mw-whatlinkshere-list"]//li//a[not(@class="new")][1]/@title',
 ).uniq.reject { |n| n.include? ':' }
 
-# Find all P39s of the 11th Parliament
-query = <<EOS
-  SELECT DISTINCT ?item
-  WHERE
-  {
-    BIND(wd:Q17510786 AS ?membership)
-    BIND(wd:Q17007305 AS ?term)
-
-    ?item p:P39 ?position_statement .
-    ?position_statement ps:P39 ?membership .
-    ?position_statement pq:P2937 ?term .
-  }
-EOS
+query = 'SELECT DISTINCT ?item WHERE { ?item p:P39/ps:P39 wd:Q17510786 }'
 p39s = EveryPolitician::Wikidata.sparql(query)
 
 EveryPolitician::Wikidata.scrape_wikidata(ids: p39s, names: { en: category_names | template_names })
